@@ -9,12 +9,15 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import storage
+import numpy as np
 
 cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred,{
     'databaseURL': "https://smart-attendance-system-c2a01-default-rtdb.firebaseio.com/",
     'storageBucket': "smart-attendance-system-c2a01.appspot.com"
 })
+
+bucket = storage.bucket()
 
 cap=cv2.VideoCapture(0)
 cap.set(3,640)
@@ -42,6 +45,8 @@ print("Encode File Loaded...")
 modeType=0
 counter=0
 id=-1
+imgStudent=[]
+
 
 while True:
     success,img=cap.read()
@@ -70,7 +75,7 @@ while True:
             y1,x2,y2,x1=y1*4,x2*4,y2*4,x1*4    # Scaling up 4 times coz it was scaled down previously
             bbox= 55+x1,162+y1,x2-x1,y2-y1     # Creating the bounding box
             imgBackground=cvzone.cornerRect(imgBackground,bbox,rt=0)
-            id=studentIds[matchIndex]
+            id=studentIds[matchIndex]          # Retrieving ID of student whose face is detected
 
             if counter == 0:
                 counter=1
@@ -78,10 +83,17 @@ while True:
 
     if counter!=0:
 
+        # Only in the first frame the download of student data happens
         if counter==1:
-            studentInfo = db.reference(f'Students/{id}').get()
+            studentInfo = db.reference(f'Students/{id}').get()    # Extracting the data of student corresponding to the ID that is detected from the DB
             print(studentInfo)
 
+            # Getting the image from the storage
+            blob = bucket.get_blob(f'Images/{id}.jpg')
+            array = np.frombuffer(blob.download_as_string(),np.uint8)
+            imgStudent=cv2.imdecode(array,cv2.COLOR_BGRA2BGR)
+
+        # Dynamically updating attendance, mode and other info from the DB
         cv2.putText(imgBackground,str(studentInfo['total_attendance']),(861,125),
                     cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),1)
 
@@ -100,8 +112,14 @@ while True:
         cv2.putText(imgBackground, str(studentInfo['starting_year']), (1125, 625),
                     cv2.FONT_HERSHEY_COMPLEX, 0.6, (100, 100, 100), 1)
 
-        cv2.putText(imgBackground, str(studentInfo['name']), (808, 445),
+        # Resizing and centering the name
+        (w,h), _ = cv2.getTextSize(studentInfo['name'],cv2.FONT_HERSHEY_COMPLEX, 1,1)
+        offset=(414-w)//2
+        cv2.putText(imgBackground, str(studentInfo['name']), (808+offset, 445),
                     cv2.FONT_HERSHEY_COMPLEX, 1, (50, 50, 50), 1)
+
+        # Putting the image dynamically from DB
+        imgBackground[175:175+216,909:909+216] = imgStudent
 
         counter += 1
 
