@@ -12,6 +12,7 @@ from firebase_admin import db
 from firebase_admin import storage
 import numpy as np
 
+# Database setup
 cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred,{
     'databaseURL': "https://smart-attendance-system-c2a01-default-rtdb.firebaseio.com/",
@@ -52,11 +53,11 @@ imgStudent=[]
 while True:
     success,img=cap.read()
 
-    imgS=cv2.resize(img,(0,0), None, 0.25, 0.25)   # Scaling down the image to 1/4th
+    imgS=cv2.resize(img,(0,0), None, 0.25, 0.25)   # Scaling down the image to 1/4th as it takes a lot of computaton power
     imgS=cv2.cvtColor(imgS,cv2.COLOR_BGR2RGB)
 
     faceCurrFrame=face_recognition.face_locations(imgS)    # Detects the current face frame
-    encodeCurrFrame=face_recognition.face_encodings(imgS,faceCurrFrame)
+    encodeCurrFrame=face_recognition.face_encodings(imgS,faceCurrFrame)  # Finds the encodings of the current detected face
 
     imgBackground[162:162+480,55:55+640]=img  # Overlaying the image upon the background template
     imgBackground[44:44+633, 808:808 + 414] = imgModeList[modeType]
@@ -69,15 +70,15 @@ while True:
             # print("Matches:",matches)
             # print("Face Distance:",faceDis)
 
-            matchIndex=np.argmin(faceDis)
+            matchIndex=np.argmin(faceDis)   # Returns the index with the min face distance as that will be the match
             # print("Match Index",matchIndex)
 
             if matches[matchIndex]:
-                print("Known Face Detected!")
-                y1,x2,y2,x1=faceLoc
+                # print("Known Face Detected!")
+                y1,x2,y2,x1=faceLoc   # Mapping the face locations
                 y1,x2,y2,x1=y1*4,x2*4,y2*4,x1*4    # Scaling up 4 times coz it was scaled down previously
-                bbox= 55+x1,162+y1,x2-x1,y2-y1     # Creating the bounding box
-                imgBackground=cvzone.cornerRect(imgBackground,bbox,rt=0)
+                bbox= 55+x1,162+y1,x2-x1,y2-y1     # Creating the bounding box (x,y,w,h)
+                imgBackground=cvzone.cornerRect(imgBackground,bbox,rt=0)  # Rectangle thickness (rt)
                 id=studentIds[matchIndex]          # Retrieving ID of student whose face is detected
 
                 if counter == 0:
