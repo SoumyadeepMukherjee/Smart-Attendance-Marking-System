@@ -67,8 +67,8 @@ while True:
         for encodeFace,faceLoc in zip(encodeCurrFrame,faceCurrFrame):
             matches=face_recognition.compare_faces(encodeListKnown,encodeFace)
             faceDis=face_recognition.face_distance(encodeListKnown,encodeFace)   # Lower the face distance , better the match
-            # print("Matches:",matches)
-            # print("Face Distance:",faceDis)
+            print("Matches:",matches)
+            print("Face Distance:",faceDis)
 
             matchIndex=np.argmin(faceDis)   # Returns the index with the min face distance as that will be the match
             # print("Match Index",matchIndex)
