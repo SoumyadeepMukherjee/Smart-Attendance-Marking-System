@@ -10,3 +10,12 @@ Develop a Smart Attendance Marking System (SAMS) that can be used by colleges,sc
 * Facilitates the easy attendance management of students using Face Detection which is one of the most modern technologies.
 * Provides a robust and stable attendance system which reduces the flaws of our existing system.
 
+### Libraries used :
+
+* cmake
+* dlib
+* opencv
+* face_recognition
+* cvzone
+* numpy
+
