@@ -18,4 +18,5 @@ Develop a Smart Attendance Marking System (SAMS) that can be used by colleges,sc
 * face_recognition
 * cvzone
 * numpy
+* pickle
 
