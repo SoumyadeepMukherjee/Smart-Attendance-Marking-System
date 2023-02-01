@@ -23,3 +23,14 @@ pickle
 firebase
 ```
 
+### Steps involved so far :
+
+* Importing the required libraries.
+* Setting up the webcam and importing the required graphics.
+* Creating the encoding generator.
+* Implementing face recognition algorithms to show whether faces are correctly detected and matched or not.
+* Setting up the database, here Firebase.
+* Adding data to the database.
+* Adding the images to the database.
+* Updating the Real-time Database accordingly.
+
