@@ -12,11 +12,14 @@ Develop a Smart Attendance Marking System (SAMS) that can be used by colleges,sc
 
 ### Libraries used :
 
-* cmake
-* dlib
-* opencv
-* face_recognition
-* cvzone
-* numpy
-* pickle
+```
+cmake
+dlib
+opencv
+face_recognition
+cvzone
+numpy
+pickle
+firebase
+```
 
