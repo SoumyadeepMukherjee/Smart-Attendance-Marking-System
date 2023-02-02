@@ -13,12 +13,12 @@ data={
     "1":
         {
             "name":"Soumyadeep Mukherjee",
-            "major":"Information Technology",
+            "major":"IT",
             "starting_year":2019,
-            "total_attendance":5,
+            "total_attendance":7,
             "grade": "O",
             "year":4,
-            "last_attendance_time":"2023-01-10 11:30:00"
+            "last_attendance_time":"2023-01-10 12:30:00"
         },
     "2":
         {
@@ -39,18 +39,7 @@ data={
             "grade": "E",
             "year":2,
             "last_attendance_time":"2023-01-10 11:30:00"
-        },
-    "4":
-        {
-            "name":"Soumyadeep Mukherjee",
-            "major":"Information Technology",
-            "starting_year":2019,
-            "total_attendance":7,
-            "grade": "O",
-            "year":4,
-            "last_attendance_time":"2023-01-10 12:30:00"
         }
-
 }
 
 for key,value in data.items():

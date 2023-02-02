@@ -82,10 +82,10 @@ while True:
                 id=studentIds[matchIndex]          # Retrieving ID of student whose face is detected
 
                 if counter == 0:
-                    counter=1
-                    modeType=1
                     cvzone.putTextRect(imgBackground,"Loading",(275,400))
                     cv2.imshow("Face Attendance", imgBackground)
+                    counter = 1
+                    modeType = 1
                     cv2.waitKey(1)
 
         if counter!=0:
@@ -106,21 +106,22 @@ while True:
                 secondsElapsed=(datetime.now()-dateTimeObject).total_seconds()
                 print(secondsElapsed)
 
-                if secondsElapsed > 30:
+                if secondsElapsed > 40:
                     ref=db.reference(f'Students/{id}')
                     studentInfo['total_attendance']+=1
                     ref.child('total_attendance').set(studentInfo['total_attendance'])
                     ref.child('last_attendance_time').set(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
+                # Already marked case
                 else:
                     modeType=3
                     counter=0
                     imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
 
-
+            # If already not marked, then perform the update
             if modeType !=3:
                 # ModeType becomes 2 when no. of frames are between 10 and 20
-                if 10<counter<20:
+                if 30<counter<40:
                     modeType = 2
 
                 imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
@@ -128,7 +129,7 @@ while True:
 
                 # When no. of frames are less than 10
                 # Dynamically updating attendance, mode and other info from the DB
-                if counter<=10:
+                if counter<=30:
                     cv2.putText(imgBackground,str(studentInfo['total_attendance']),(861,125),
                                 cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),1)
 
@@ -154,12 +155,12 @@ while True:
                                 cv2.FONT_HERSHEY_COMPLEX, 1, (50, 50, 50), 1)
 
                     # Putting the image dynamically from DB
-                    # imgBackground[175:175+216,909:909+216] = imgStudent
+                    imgBackground[175:175+216,909:909+216] = imgStudent
 
                 counter += 1
 
                 # Resetting the values & mode after attendance is marked
-                if counter>=20:
+                if counter>=40:
                     counter=0
                     modeType=0
                     studentInfo=[]
