@@ -15,7 +15,7 @@ Develop a Smart Attendance Marking System (SAMS) that can be used by colleges,sc
 ```
 cmake
 dlib
-opencv
+opencv-python
 face_recognition
 cvzone
 numpy
