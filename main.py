@@ -120,14 +120,14 @@ while True:
 
             # If already not marked, then perform the update
             if modeType !=3:
-                # ModeType becomes 2 when no. of frames are between 10 and 20
+                # ModeType becomes 2 when no. of frames are between 30 and 40
                 if 30<counter<40:
                     modeType = 2
 
                 imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
 
 
-                # When no. of frames are less than 10
+                # When no. of frames are less than 30
                 # Dynamically updating attendance, mode and other info from the DB
                 if counter<=30:
                     cv2.putText(imgBackground,str(studentInfo['total_attendance']),(861,125),
