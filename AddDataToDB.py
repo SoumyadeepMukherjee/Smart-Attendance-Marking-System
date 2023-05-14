@@ -59,7 +59,7 @@ data={
             "grade": "E",
             "year":4,
             "last_attendance_time":"2023-01-10 11:30:00"
-        },
+        }
 }
 
 for key,value in data.items():

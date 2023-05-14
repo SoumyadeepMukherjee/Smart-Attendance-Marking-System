@@ -35,6 +35,25 @@ for path in modePathList:
     imgModeList.append(cv2.imread(os.path.join(folderModePath,path)))
 # print(len(imgModeList))
 
+# Creating a dictionary of names with their corresponding ids
+imgPath='Images'
+images = []
+ids = []
+names=['Soumyadeep','Sundar Pichai','Elon Musk','Sparsh','Tannistha']
+classNames={}
+
+imgPathList = os.listdir(imgPath)
+print(imgPathList)
+for img in imgPathList:
+    curImg = cv2.imread(f'{imgPath}/{img}')
+    images.append(curImg)
+    ids.append(os.path.splitext(img)[0])
+
+# print(ids)
+
+classNames={k:v for k,v in zip(ids,names)}
+print(classNames)
+
 # Load the encoding file
 print("Loading Encode File...")
 file=open('EncodeFile.p','rb')
@@ -75,11 +94,18 @@ while True:
 
             if matches[matchIndex]:
                 # print("Known Face Detected!")
+                id = studentIds[matchIndex]  # Retrieving ID of student whose face is detected
+
+                name=classNames[id].upper()
+
                 y1,x2,y2,x1=faceLoc   # Mapping the face locations
                 y1,x2,y2,x1=y1*4,x2*4,y2*4,x1*4    # Scaling up 4 times coz it was scaled down previously
                 bbox= 55+x1,162+y1,x2-x1,y2-y1     # Creating the bounding box (x,y,w,h)
-                imgBackground=cvzone.cornerRect(imgBackground,bbox,rt=0)  # Rectangle thickness (rt)
-                id=studentIds[matchIndex]          # Retrieving ID of student whose face is detected
+                # imgBackground=cvzone.cornerRect(imgBackground,bbox,rt=0)  # Rectangle thickness (rt)
+
+                cv2.rectangle(imgBackground, bbox, (0, 255, 0), 2)
+                # cv2.rectangle(imgBackground, (x1, y2 - 35), (x2, y2), (0, 250, 0), cv2.FILLED)
+                cv2.putText(imgBackground, name, (x1, y2 + 10), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2)
 
                 if counter == 0:
                     cvzone.putTextRect(imgBackground,"Loading",(275,400))
@@ -105,6 +131,9 @@ while True:
                                                   "%Y-%m-%d %H:%M:%S")
                 secondsElapsed=(datetime.now()-dateTimeObject).total_seconds()
                 print(secondsElapsed)
+
+                dt=datetime.datetime.now()
+                day=dt.strftime("%d")
 
                 if secondsElapsed > 40:
                     ref=db.reference(f'Students/{id}')
