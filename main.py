@@ -101,15 +101,15 @@ while True:
                 y1,x2,y2,x1=faceLoc   # Mapping the face locations
                 y1,x2,y2,x1=y1*4,x2*4,y2*4,x1*4    # Scaling up 4 times coz it was scaled down previously
                 bbox= 55+x1,162+y1,x2-x1,y2-y1     # Creating the bounding box (x,y,w,h)
-                # imgBackground=cvzone.cornerRect(imgBackground,bbox,rt=0)  # Rectangle thickness (rt)
+                imgBackground=cvzone.cornerRect(imgBackground,bbox,rt=0)  # Rectangle thickness (rt)
 
-                cv2.rectangle(imgBackground, bbox, (0, 255, 0), 2)
+                # cv2.rectangle(imgBackground, bbox, (0, 255, 0), 2)
                 # cv2.rectangle(imgBackground, (x1, y2 - 35), (x2, y2), (0, 250, 0), cv2.FILLED)
                 cv2.putText(imgBackground, name, (x1, y2 + 10), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2)
 
                 if counter == 0:
                     cvzone.putTextRect(imgBackground,"Loading",(275,400))
-                    cv2.imshow("Face Attendance", imgBackground)
+                    cv2.imshow("Smart Attendance Systen", imgBackground)
                     counter = 1
                     modeType = 1
                     cv2.waitKey(1)
@@ -132,7 +132,7 @@ while True:
                 secondsElapsed=(datetime.now()-dateTimeObject).total_seconds()
                 print(secondsElapsed)
 
-                dt=datetime.datetime.now()
+                dt=datetime.now()
                 day=dt.strftime("%d")
 
                 if secondsElapsed > 40:
@@ -200,5 +200,5 @@ while True:
         counter=0
 
     # cv2.imshow("Webcam",img)
-    cv2.imshow("Face Attendance", imgBackground)
+    cv2.imshow("Smart Attendance System", imgBackground)
     cv2.waitKey(1)
