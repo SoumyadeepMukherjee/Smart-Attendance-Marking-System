@@ -68,7 +68,6 @@ counter=0
 id=-1
 imgStudent=[]
 
-
 while True:
     success,img=cap.read()
 
@@ -109,7 +108,7 @@ while True:
 
                 if counter == 0:
                     cvzone.putTextRect(imgBackground,"Loading",(275,400))
-                    cv2.imshow("Smart Attendance Systen", imgBackground)
+                    cv2.imshow("Smart Attendance System", imgBackground)
                     counter = 1
                     modeType = 1
                     cv2.waitKey(1)
@@ -122,7 +121,7 @@ while True:
                 print(studentInfo)
 
                 # Getting the image from the storage
-                blob = bucket.get_blob(f'Images/{id}.jpg')
+                blob = bucket.blob(f'Images/{id}.jpg')
                 array = np.frombuffer(blob.download_as_string(),np.uint8)
                 imgStudent=cv2.imdecode(array,cv2.COLOR_BGRA2BGR)
 
@@ -132,14 +131,12 @@ while True:
                 secondsElapsed=(datetime.now()-dateTimeObject).total_seconds()
                 print(secondsElapsed)
 
-                dt=datetime.now()
-                day=dt.strftime("%d")
-
-                if secondsElapsed > 40:
+                if secondsElapsed > 50:
                     ref=db.reference(f'Students/{id}')
                     studentInfo['total_attendance']+=1
                     ref.child('total_attendance').set(studentInfo['total_attendance'])
                     ref.child('last_attendance_time').set(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
 
                 # Already marked case
                 else:
@@ -150,7 +147,7 @@ while True:
             # If already not marked, then perform the update
             if modeType !=3:
                 # ModeType becomes 2 when no. of frames are between 30 and 40
-                if 30<counter<40:
+                if 20<counter<40:
                     modeType = 2
 
                 imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
@@ -158,7 +155,7 @@ while True:
 
                 # When no. of frames are less than 30
                 # Dynamically updating attendance, mode and other info from the DB
-                if counter<=30:
+                if counter<=20:
                     cv2.putText(imgBackground,str(studentInfo['total_attendance']),(861,125),
                                 cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),1)
 
@@ -193,7 +190,7 @@ while True:
                     counter=0
                     modeType=0
                     studentInfo=[]
-                    imgStudent=[]
+                    imgStudent=[] 
                     imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]
     else:
         modeType=0
@@ -201,4 +198,8 @@ while True:
 
     # cv2.imshow("Webcam",img)
     cv2.imshow("Smart Attendance System", imgBackground)
-    cv2.waitKey(1)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
